@@ -10,6 +10,13 @@ export interface Institution {
 export const institutions: Institution[] = [
 
   {
+    id: 'ifsemg',
+    name: 'Instituto Federal do Sudeste de Minas Gerais (IFSEMG)',
+    cardText: 'Instituto Federal do Sudeste de Minas Gerais',
+    logoUrl: '/assets/logos/IFSEMG.png',
+  },
+
+  {
     id: 'ufscar',
     name: 'Universidade Federal de São Carlos (UFSCar)',
     cardText: 'Universidade Federal\nde São Carlos',
