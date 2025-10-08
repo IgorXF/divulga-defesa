@@ -4,26 +4,34 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { toPng } from 'html-to-image';
-import { Download, Eye, UploadCloud } from 'lucide-react';
+import { Download, Eye, UploadCloud, XCircle, PlusCircle } from 'lucide-react';
 
 import ConviteCard from '@/components/ConviteCard';
 import { institutions, Institution } from '@/lib/institutions';
 
+// Definindo o tipo para um membro da banca
+type BancaMember = {
+  id: number;
+  nome: string;
+  papel: string;
+};
+
+const placeholderPhoto = "/assets/logos/placeholder-foto.jpg";
+
 export default function GerarConvitePage() {
   const cardRef = useRef<HTMLDivElement>(null);
   
-  const [photoPreviewUrl, setPhotoPreviewUrl] = useState("/assets/logos/placeholder-foto.png");
+  const [photoPreviewUrl, setPhotoPreviewUrl] = useState(placeholderPhoto);
   
-  // MUDANÇA: 'link' foi trocado por 'emailOrientador'
   const [formData, setFormData] = useState({
     instituicaoId: institutions[0].id,
     tipoDefesa: '',
     titulo: '',
     candidato: '',
-    banca: '',
+    banca: [] as BancaMember[],
     data: '',
     hora: '',
-    emailOrientador: '', // Novo campo
+    emailOrientador: '',
   });
 
   const [selectedInstitution, setSelectedInstitution] = useState<Institution>(institutions[0]);
@@ -45,10 +53,43 @@ export default function GerarConvitePage() {
       reader.readAsDataURL(file);
     }
   };
+  
+  const handleRemovePhoto = () => {
+    setPhotoPreviewUrl(placeholderPhoto);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  // --- Funções para Gerenciar a Banca ---
+  const handleBancaChange = (id: number, field: 'nome' | 'papel', value: string) => {
+    setFormData(prevState => ({
+      ...prevState,
+      banca: prevState.banca.map(member => 
+        member.id === id ? { ...member, [field]: value } : member
+      )
+    }));
+  };
+
+  const addBancaMember = () => {
+    const newMember: BancaMember = {
+      id: Date.now(),
+      nome: '',
+      papel: 'Membro Interno'
+    };
+    setFormData(prevState => ({
+      ...prevState,
+      banca: [...prevState.banca, newMember]
+    }));
+  };
+
+  const removeBancaMember = (id: number) => {
+    setFormData(prevState => ({
+      ...prevState,
+      banca: prevState.banca.filter(member => member.id !== id)
+    }));
   };
 
   const handleGerarImagem = async () => {
@@ -58,12 +99,14 @@ export default function GerarConvitePage() {
 
     try {
       const dataUrl = await toPng(cardRef.current, { 
-        cacheBust: true, 
         quality: 1.0, 
         pixelRatio: 2.5,
         backgroundColor: '#ffffff',
-        skipAutoScale: true,
-        imagePlaceholder: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+        fetchRequest: (url) => {
+          const cacheBustedUrl = new URL(url, window.location.href);
+          cacheBustedUrl.searchParams.set('t', Date.now().toString());
+          return fetch(cacheBustedUrl.href);
+        },
       });
 
       const link = document.createElement('a');
@@ -118,19 +161,62 @@ export default function GerarConvitePage() {
                     <label htmlFor="candidato" className="block text-sm font-medium text-gray-700">Nome do Candidato(a)</label>
                     <input type="text" name="candidato" placeholder="Nome completo do(a) candidato(a)" value={formData.candidato} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                  </div>
+                 
                  <div>
                     <label className="block text-sm font-medium text-gray-700">Foto do Candidato(a)</label>
-                    <label htmlFor="photoUpload" className="mt-1 flex justify-center items-center gap-2 w-full px-4 py-2 border-2 border-dashed rounded-md cursor-pointer hover:bg-gray-50">
-                      <UploadCloud size={20} className="text-gray-500" />
-                      <span className="text-blue-600 font-semibold">Clique para enviar uma imagem</span>
-                    </label>
-                    <input id="photoUpload" name="photoUpload" type="file" accept="image/*" onChange={handlePhotoChange} className="sr-only" />
+                    <div className="mt-1 flex items-center gap-4">
+                      <label htmlFor="photoUpload" className="flex-grow flex justify-center items-center gap-2 px-4 py-2 border-2 border-dashed rounded-md cursor-pointer hover:bg-gray-50">
+                        <UploadCloud size={20} className="text-gray-500" />
+                        <span className="text-blue-600 font-semibold">Enviar imagem</span>
+                      </label>
+                      <input id="photoUpload" name="photoUpload" type="file" accept="image/*" onChange={handlePhotoChange} className="sr-only" />
+                      {photoPreviewUrl !== placeholderPhoto && (
+                        <button type="button" onClick={handleRemovePhoto} className="p-2 text-red-600 hover:text-red-800">
+                          <XCircle size={24} />
+                        </button>
+                      )}
+                    </div>
                  </div>
+
                  <div>
-                    <label htmlFor="banca" className="block text-sm font-medium text-gray-700">Membros da Banca (um por linha)</label>
-                    <textarea name="banca" placeholder="Prof. Nome Sobrenome (Orientador)&#10;Prof. Nome Sobrenome (Membro Interno)" value={formData.banca} onChange={handleChange} rows={5} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"></textarea>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Membros da Banca</label>
+                    <div className="space-y-3">
+                      {formData.banca.map((member) => (
+                        <div key={member.id} className="flex items-center gap-2 p-2 border rounded-md">
+                          <div className="flex-grow">
+                            <input 
+                              type="text" 
+                              placeholder="Nome do Membro" 
+                              value={member.nome}
+                              onChange={(e) => handleBancaChange(member.id, 'nome', e.target.value)}
+                              className="block w-full text-sm rounded-md border-gray-300 shadow-sm"
+                            />
+                          </div>
+                          <div className="w-48">
+                            <select 
+                              value={member.papel}
+                              onChange={(e) => handleBancaChange(member.id, 'papel', e.target.value)}
+                              className="block w-full text-sm rounded-md border-gray-300 shadow-sm"
+                            >
+                              <option>Orientador</option>
+                              <option>Coorientador</option>
+                              <option>Membro Interno</option>
+                              <option>Membro Externo</option>
+                            </select>
+                          </div>
+                          <button type="button" onClick={() => removeBancaMember(member.id)} className="p-2 text-gray-500 hover:text-red-600">
+                            <XCircle size={20} />
+                          </button>
+                        </div>
+                      ))}
+                      <button type="button" onClick={addBancaMember} className="w-full flex items-center justify-center gap-2 mt-2 px-4 py-2 border-2 border-dashed rounded-md text-sm text-blue-600 font-semibold hover:bg-blue-50">
+                        <PlusCircle size={18} />
+                        Adicionar Membro à Banca
+                      </button>
+                    </div>
                  </div>
               </fieldset>
+              
               <fieldset className="space-y-4">
                  <legend className="text-xl font-bold text-gray-700 border-b pb-2 mb-4 w-full">Informações de Acesso</legend>
                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -143,12 +229,12 @@ export default function GerarConvitePage() {
                         <input type="text" name="hora" placeholder="HH:MMh" value={formData.hora} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                     </div>
                  </div>
-                 {/* MUDANÇA: Campo 'link' trocado por 'emailOrientador' */}
                  <div className="mt-2">
                     <label htmlFor="emailOrientador" className="block text-sm font-medium text-gray-700">E-mail do Orientador</label>
                     <input type="email" name="emailOrientador" placeholder="email.orientador@exemplo.com" value={formData.emailOrientador} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                  </div>
               </fieldset>
+              
               <div className="pt-4">
                 <button type="button" onClick={handleGerarImagem} className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-colors duration-300 shadow-md">
                   <Download size={20} />
@@ -157,6 +243,7 @@ export default function GerarConvitePage() {
               </div>
             </form>
           </div>
+
           <div className="sticky top-8 self-start">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2"><Eye size={28}/> Pré-visualização</h2>
             <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200">
@@ -171,6 +258,7 @@ export default function GerarConvitePage() {
             </div>
           </div>
         </div>
+
         <div className="absolute -left-[9999px] top-0">
           <ConviteCard
             ref={cardRef}
