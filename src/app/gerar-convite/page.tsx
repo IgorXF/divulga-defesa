@@ -98,15 +98,12 @@ export default function GerarConvitePage() {
     }
 
     try {
+      // MUDANÇA AQUI: Removido o bloco 'fetchRequest' que causava o erro de build.
       const dataUrl = await toPng(cardRef.current, { 
         quality: 1.0, 
         pixelRatio: 2.5,
         backgroundColor: '#ffffff',
-        fetchRequest: (url) => {
-          const cacheBustedUrl = new URL(url, window.location.href);
-          cacheBustedUrl.searchParams.set('t', Date.now().toString());
-          return fetch(cacheBustedUrl.href);
-        },
+        // As outras opções para ajudar com o cache (como 'key' e 'unoptimized' no ConviteCard) já estão ativas.
       });
 
       const link = document.createElement('a');
