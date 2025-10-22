@@ -50,11 +50,6 @@ export default function BoletimSemanalPage() {
             quality: 1.0,
             pixelRatio: 2.5,
             backgroundColor: '#ffffff',
-            fetchRequest: (url) => {
-              const cacheBustedUrl = new URL(url, window.location.href);
-              cacheBustedUrl.searchParams.set('t', Date.now().toString());
-              return fetch(cacheBustedUrl.href);
-            },
           });
 
           const link = document.createElement('a');
