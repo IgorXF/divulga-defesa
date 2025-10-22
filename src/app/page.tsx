@@ -12,12 +12,21 @@ export default function HomePage() {
         <p className="text-lg text-gray-600 mb-8 max-w-2xl">
           Uma ferramenta simples para criar e compartilhar convites profissionais para qualificações, dissertações e teses.
         </p>
-        <Link 
-          href="/gerar-convite" 
-          className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 duration-300 shadow-lg"
-        >
-          Criar um Convite Agora
-        </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/gerar-convite"
+            className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 transition-transform transform hover:scale-105 duration-300 shadow-lg"
+          >
+            Criar um Convite Agora
+          </Link>
+
+          <Link
+            href="/boletim-semanal"
+            className="bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-green-700 transition-transform transform hover:scale-105 duration-300 shadow-lg"
+          >
+            Ver Boletim Semanal
+          </Link>
+        </div>
       </div>
     </main>
   );

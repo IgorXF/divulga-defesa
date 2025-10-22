@@ -2,7 +2,7 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; // Garanta que este import esteja aqui
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,8 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
-        {children}
+      {/* CORREÇÃO: Removidas classes como min-h-screen ou h-screen daqui */}
+      <body className={inter.className}> 
+        {children} 
       </body>
     </html>
   );

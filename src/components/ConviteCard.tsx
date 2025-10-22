@@ -106,14 +106,25 @@ const ConviteCard = React.forwardRef<HTMLDivElement, ConviteCardProps>((props, r
       </main>
       
       <footer className="flex justify-between items-start pt-4 text-sm mt-auto">
+        {/* Bloco Esquerda: Informações */}
         <div className="text-left space-y-1 w-[350px]">
           <p><span className="font-bold">Data:</span> {data}</p>
           <p><span className="font-bold">Horário:</span> {hora}</p>
-          <p><span className="font-bold">E-mail do Orientador:</span> {emailOrientador && <a href={`mailto:${emailOrientador}`} className="text-blue-600 underline break-all">{emailOrientador}</a>}</p>
+          
+          {/* MUDANÇA AQUI: Separado em dois <p> */}
+          <p><span className="font-bold">E-mail do Orientador:</span></p> 
+          {emailOrientador && (
+            <p> 
+              <a href={`mailto:${emailOrientador}`} className="text-blue-600 underline break-all">{emailOrientador}</a>
+            </p>
+          )}
+          {/* FIM DA MUDANÇA */}
+
         </div>
 
         <div className="h-24 border-l-4 mx-8" style={{ borderColor: primaryRed }}></div>
 
+        {/* Bloco Direita: Banca Examinadora */}
         <div className="text-left flex-grow">
           <p className="font-extrabold text-base mb-2">Banca Examinadora:</p>
           <div className="space-y-1">
