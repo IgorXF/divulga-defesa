@@ -18,6 +18,7 @@ export interface DefesaAgendada {
   instituicaoCardText: string;
   instituicaoLogoUrl: string;
   banca: BancaMember[];
+  meetLink?: string;
 }
 
 const addDays = (date: Date, days: number): Date => {
@@ -46,6 +47,7 @@ export const mockDefesas: DefesaAgendada[] = [
       { id: 102, nome: "Prof. Dra. Membro B", papel: "Membro Interno" },
       { id: 103, nome: "Prof. Dr. Membro C", papel: "Membro Externo" },
     ],
+    meetLink: "https://meet.google.com/ana-silva-defesa",
   },
   {
     id: 2,
@@ -62,6 +64,7 @@ export const mockDefesas: DefesaAgendada[] = [
       { id: 201, nome: "Prof. Dr. Orientador X", papel: "Orientador" },
       { id: 202, nome: "Prof. Dra. Membro Y", papel: "Membro Externo" },
     ],
+    meetLink: "https://meet.google.com/bruno-costa-defesa",
   },
   {
     id: 3,

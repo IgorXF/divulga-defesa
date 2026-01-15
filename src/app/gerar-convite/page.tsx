@@ -32,6 +32,7 @@ export default function GerarConvitePage() {
     data: '',
     hora: '',
     emailOrientador: '',
+    meetLink: '',
   });
 
   const [selectedInstitution, setSelectedInstitution] = useState<Institution>(institutions[0]);
@@ -214,23 +215,27 @@ export default function GerarConvitePage() {
                  </div>
               </fieldset>
               
-              <fieldset className="space-y-4">
-                 <legend className="text-xl font-bold text-gray-700 border-b pb-2 mb-4 w-full">Informações de Acesso</legend>
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <fieldset className="space-y-4">
+                  <legend className="text-xl font-bold text-gray-700 border-b pb-2 mb-4 w-full">Informações de Acesso</legend>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label htmlFor="data" className="block text-sm font-medium text-gray-700">Data</label>
-                        <input type="text" name="data" placeholder="DD/MM/AAAA" value={formData.data} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                      <label htmlFor="data" className="block text-sm font-medium text-gray-700">Data</label>
+                      <input type="text" name="data" placeholder="DD/MM/AAAA" value={formData.data} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                     </div>
                     <div>
-                        <label htmlFor="hora" className="block text-sm font-medium text-gray-700">Hora</label>
-                        <input type="text" name="hora" placeholder="HH:MMh" value={formData.hora} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                      <label htmlFor="hora" className="block text-sm font-medium text-gray-700">Hora</label>
+                      <input type="text" name="hora" placeholder="HH:MMh" value={formData.hora} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                     </div>
-                 </div>
-                 <div className="mt-2">
+                  </div>
+                  <div className="mt-2">
                     <label htmlFor="emailOrientador" className="block text-sm font-medium text-gray-700">E-mail do Orientador</label>
                     <input type="email" name="emailOrientador" placeholder="email.orientador@exemplo.com" value={formData.emailOrientador} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                 </div>
-              </fieldset>
+                  </div>
+                  <div className="mt-2">
+                    <label htmlFor="meetLink" className="block text-sm font-medium text-gray-700">Link da Sala Virtual (Google Meet)</label>
+                    <input type="url" name="meetLink" placeholder="https://meet.google.com/xxxx-xxxx-xx" value={formData.meetLink} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                  </div>
+                </fieldset>
               
               <div className="pt-4">
                 <button type="button" onClick={handleGerarImagem} className="w-full flex items-center justify-center gap-2 bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition-colors duration-300 shadow-md">
@@ -246,10 +251,11 @@ export default function GerarConvitePage() {
             <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200">
                 <div style={{ transform: 'scale(0.55)', transformOrigin: 'top left' }} className=" -mb-[240px]">
                     <ConviteCard
-                        {...formData}
-                        instituicaoTexto={selectedInstitution.cardText}
-                        instituicaoLogoUrl={selectedInstitution.logoUrl}
-                        fotoCandidatoUrl={photoPreviewUrl}
+                      {...formData}
+                      instituicaoTexto={selectedInstitution.cardText}
+                      instituicaoLogoUrl={selectedInstitution.logoUrl}
+                      fotoCandidatoUrl={photoPreviewUrl}
+                      meetLink={formData.meetLink}
                     />
                 </div>
             </div>
@@ -263,6 +269,7 @@ export default function GerarConvitePage() {
             instituicaoTexto={selectedInstitution.cardText}
             instituicaoLogoUrl={selectedInstitution.logoUrl}
             fotoCandidatoUrl={photoPreviewUrl}
+            meetLink={formData.meetLink}
           />
         </div>
       </main>

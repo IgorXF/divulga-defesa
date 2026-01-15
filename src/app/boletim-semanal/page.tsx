@@ -104,17 +104,18 @@ export default function BoletimSemanalPage() {
         <div className="absolute -left-[9999px] top-0 p-4 opacity-0 pointer-events-none"> 
           <div className="w-[1000px]"> {/* Container com a largura exata */}
             <ConviteCard
-                ref={invisibleCardRef} // A ref agora está aqui
-                instituicaoTexto={cardToDownloadData.instituicaoCardText}
-                instituicaoLogoUrl={cardToDownloadData.instituicaoLogoUrl}
-                fotoCandidatoUrl={cardToDownloadData.candidatoFotoUrl}
-                tipoDefesa={cardToDownloadData.tipoDefesa}
-                titulo={cardToDownloadData.titulo}
-                candidato={cardToDownloadData.candidatoNome}
-                banca={cardToDownloadData.banca} 
-                data={cardToDownloadData.dataHora.toLocaleDateString('pt-BR')} 
-                hora={cardToDownloadData.dataHora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} 
-                emailOrientador={cardToDownloadData.orientadorEmail}
+              ref={invisibleCardRef}
+              instituicaoTexto={cardToDownloadData.instituicaoCardText}
+              instituicaoLogoUrl={cardToDownloadData.instituicaoLogoUrl}
+              fotoCandidatoUrl={cardToDownloadData.candidatoFotoUrl}
+              tipoDefesa={cardToDownloadData.tipoDefesa}
+              titulo={cardToDownloadData.titulo}
+              candidato={cardToDownloadData.candidatoNome}
+              banca={cardToDownloadData.banca}
+              data={cardToDownloadData.dataHora.toLocaleDateString('pt-BR')}
+              hora={cardToDownloadData.dataHora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+              emailOrientador={cardToDownloadData.orientadorEmail}
+              {...(typeof cardToDownloadData.meetLink === 'string' ? { meetLink: cardToDownloadData.meetLink } : {})}
             />
           </div>
         </div>

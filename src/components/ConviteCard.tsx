@@ -21,6 +21,7 @@ interface ConviteCardProps {
   data: string;
   hora: string;
   emailOrientador: string;
+  meetLink?: string;
 }
 
 const ConviteCard = React.forwardRef<HTMLDivElement, ConviteCardProps>((props, ref) => {
@@ -34,6 +35,7 @@ const ConviteCard = React.forwardRef<HTMLDivElement, ConviteCardProps>((props, r
     data,
     hora,
     emailOrientador,
+    meetLink,
     banca = []
   } = props;
 
@@ -110,16 +112,18 @@ const ConviteCard = React.forwardRef<HTMLDivElement, ConviteCardProps>((props, r
         <div className="text-left space-y-1 w-[350px]">
           <p><span className="font-bold">Data:</span> {data}</p>
           <p><span className="font-bold">Horário:</span> {hora}</p>
-          
-          {/* MUDANÇA AQUI: Separado em dois <p> */}
-          <p><span className="font-bold">E-mail do Orientador:</span></p> 
+          <p><span className="font-bold">E-mail do Orientador:</span></p>
           {emailOrientador && (
-            <p> 
+            <p>
               <a href={`mailto:${emailOrientador}`} className="text-blue-600 underline break-all">{emailOrientador}</a>
             </p>
           )}
-          {/* FIM DA MUDANÇA */}
-
+          {/* Link do Meet */}
+          {meetLink && (
+            <p className="mt-2">
+              <span className="font-bold">Sala virtual:</span> <a href={meetLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline break-all">{meetLink}</a>
+            </p>
+          )}
         </div>
 
         <div className="h-24 border-l-4 mx-8" style={{ borderColor: primaryRed }}></div>
